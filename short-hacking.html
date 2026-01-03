@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKER X | Terminal Ops</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: #000; 
+            color: #00ff41; 
+            font-family: 'Source Code Pro', monospace; 
+            padding: 20px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Terminal Window Look */
+        .terminal-window {
+            border: 1px solid #333;
+            background: #050505;
+            padding: 20px;
+            min-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            position: relative;
+        }
+
+        .terminal-header {
+            color: #555;
+            font-size: 0.8em;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #111;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .command-line { margin-bottom: 10px; display: block; }
+        .prompt { color: #888; }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #00ff41;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .back-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #00ff41;
+            text-decoration: none;
+            border: 1px solid #00ff41;
+            padding: 10px 20px;
+            font-size: 0.8em;
+            transition: 0.3s;
+        }
+        .back-link:hover { background: #00ff41; color: #000; }
+        
+        .output-success { color: #00ff41; }
+        .output-warning { color: #ffcc00; }
+        .output-error { color: #ff4141; }
+    </style>
+</head>
+<body>
+
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span>TERMINAL V3.0 - SESSION_ACTIVE</span>
+            <span>HACKER X OS</span>
+        </div>
+
+        <div id="terminal-content">
+            </div>
+        <span class="cursor"></span>
+    </div>
+
+    <a href="index.html" class="back-link">EXIT TERMINAL</a>
+
+    <script>
+        const content = document.getElementById('terminal-content');
+        const commands = [
+            { text: "> Initializing system breach...", type: "prompt" },
+            { text: "STP Status: CONNECTED", type: "output-success" },
+            { text: "> Accessing encrypted database...", type: "prompt" },
+            { text: "Searching for vulnerabilities...", type: "output-warning" },
+            { text: "[OK] SQL Injection target identified", type: "output-success" },
+            { text: "> Injecting custom exploit payloads...", type: "prompt" },
+            { text: "Bypassing firewall level 4...", type: "output-warning" },
+            { text: "ACCESS GRANTED: Root user privileged", type: "output-success" },
+            { text: "------------------------------------", type: "prompt" },
+            { text: "SYSTEM STATUS: CONTROLLED BY HACKER X", type: "output-error" }
+        ];
+
+        let lineIndex = 0;
+
+        function typeLine() {
+            if (lineIndex < commands.length) {
+                const line = document.createElement('div');
+                line.className = 'command-line ' + commands[lineIndex].type;
+                content.appendChild(line);
+                
+                let charIndex = 0;
+                let currentText = commands[lineIndex].text;
+                
+                const interval = setInterval(() => {
+                    line.textContent += currentText[charIndex];
+                    charIndex++;
+                    
+                    if (charIndex === currentText.length) {
+                        clearInterval(interval);
+                        lineIndex++;
+                        setTimeout(typeLine, 600); // അടുത്ത വരി തുടങ്ങാനുള്ള താമസം
+                    }
+                }, 50); // ഓരോ അക്ഷരവും ടൈപ്പ് ചെയ്യുന്ന സ്പീഡ്
+            }
+        }
+
+        window.onload = () => {
+            // ലോഗിൻ ചെക്കിംഗ്
+            if(localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = "login.html";
+                return;
+            }
+            // ടൈപ്പിംഗ് തുടങ്ങുന്നു
+            setTimeout(typeLine, 1000);
+        };
+    </script>
+</body>
+</html>

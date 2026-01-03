@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKER X | Web Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: #050505; color: white; 
+            font-family: 'Poppins', sans-serif; overflow-x: hidden; 
+        }
+
+        /* Header Area */
+        header {
+            padding: 30px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #1a1a1a; background: rgba(0,0,0,0.9);
+        }
+        .back-btn { color: #00ff41; text-decoration: none; font-family: 'Source Code Pro'; font-size: 0.9em; }
+
+        /* Hero */
+        .page-title { text-align: center; padding: 60px 20px; }
+        .page-title h1 { 
+            font-family: 'Source Code Pro'; font-size: 2.5em; color: #00ff41; 
+            letter-spacing: 5px; text-transform: uppercase;
+        }
+        .page-title p { color: #555; font-size: 0.9em; margin-top: 10px; letter-spacing: 2px; }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; padding: 40px; max-width: 1200px; margin: 0 auto;
+        }
+        .project-card {
+            background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 15px;
+            overflow: hidden; transition: 0.4s; position: relative;
+        }
+        .project-card:hover { border-color: #00ff41; transform: translateY(-10px); }
+        
+        .project-img { width: 100%; height: 200px; background: #1a1a1a; display: flex; justify-content: center; align-items: center; }
+        .project-img i { font-size: 3em; color: #333; }
+
+        .project-info { padding: 25px; }
+        .project-info h3 { color: #00ff41; margin-bottom: 10px; font-family: 'Source Code Pro'; }
+        .project-info p { color: #888; font-size: 0.85em; margin-bottom: 20px; }
+        
+        .btn-view {
+            display: inline-block; padding: 8px 20px; border: 1px solid #00ff41;
+            color: #00ff41; text-decoration: none; border-radius: 5px; font-size: 0.8em;
+            transition: 0.3s;
+        }
+        .btn-view:hover { background: #00ff41; color: #000; }
+
+        /* Floating Stats */
+        .stats-bar {
+            display: flex; justify-content: space-around; background: #0a0a0a;
+            padding: 30px; border-top: 1px solid #1a1a1a; margin-top: 50px;
+        }
+        .stat-item { text-align: center; }
+        .stat-item h4 { color: #00ff41; font-size: 1.5em; }
+        .stat-item p { color: #444; font-size: 0.7em; text-transform: uppercase; letter-spacing: 1px; }
+
+        footer { text-align: center; padding: 40px; color: #222; font-size: 0.7em; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> RETURN TO SYSTEM</a>
+        <div style="color: #00ff41; font-family: 'Source Code Pro'; font-size: 0.8em;">SECURE LINK: ESTABLISHED</div>
+    </header>
+
+    <section class="page-title">
+        <h1>Web Architecture</h1>
+        <p>DECODING THE VISUAL INTERFACE</p>
+    </section>
+
+    <div class="project-grid">
+        <div class="project-card">
+            <div class="project-img"><i class="fas fa-microchip"></i></div>
+            <div class="project-info">
+                <h3>Cyber Interface v1.0</h3>
+                <p>Advanced dark-mode dashboard with real-time data visualization.</p>
+                <a href="#" class="btn-view">ACCESS MODULE</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-img"><i class="fas fa-project-diagram"></i></div>
+            <div class="project-info">
+                <h3>Neural Network UI</h3>
+                <p>A minimalist design concept for future AI integration systems.</p>
+                <a href="#" class="btn-view">ACCESS MODULE</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-img"><i class="fas fa-code-branch"></i></div>
+            <div class="project-info">
+                <h3>Encryption Portal</h3>
+                <p>Landing page designed for high-security file sharing services.</p>
+                <a href="#" class="btn-view">ACCESS MODULE</a>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <section class="stats-bar">
+        <div class="stat-item">
+            <h4>48+</h4>
+            <p>Vaults Designed</p>
+        </div>
+        <div class="stat-item">
+            <h4>100%</h4>
+            <p>Code Integrity</p>
+        </div>
+        <div class="stat-item">
+            <h4>0</h4>
+            <p>System Breaches</p>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2025 HACKER X | DESIGN CORE V3.0
+    </footer>
+
+    <script>
+        // ലോഗിൻ ചെയ്യാതെ ഈ പേജിൽ വന്നാൽ തിരിച്ചയക്കാൻ
+        window.onload = () => {
+            if(localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = "login.html";
+            }
+        };
+    </script>
+</body>
+</html>
