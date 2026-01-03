@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKER X | Secure Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #050505; color: #00ff41; font-family: 'Poppins', sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        .login-box { 
+            background: #0a0a0a; padding: 40px; border-radius: 20px; 
+            border: 1px solid #1a1a1a; text-align: center; width: 380px; 
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1); 
+            position: relative; z-index: 2;
+        }
+
+        h2 { letter-spacing: 5px; margin-bottom: 25px; text-transform: uppercase; font-size: 1.1em; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { font-size: 0.6em; letter-spacing: 2px; color: #555; display: block; margin-bottom: 5px; }
+        
+        input { 
+            background: #000; border: 1px solid #1a1a1a; padding: 12px; 
+            width: 100%; color: #00ff41; border-radius: 5px; outline: none; 
+            font-family: monospace; transition: 0.3s;
+        }
+        input:focus { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
+
+        #fingerprint-section { display: none; }
+        .fingerprint-container { width: 110px; height: 110px; margin: 20px auto; position: relative; cursor: pointer; }
+        .fingerprint-icon { font-size: 85px; color: #111; transition: 0.3s; }
+        
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #00ff41; box-shadow: 0 0 15px #00ff41; display: none; z-index: 10; }
+        
+        @keyframes scanning { 0% { top: 0; } 100% { top: 100%; } }
+        .active-scan .scan-line { display: block; animation: scanning 1.5s linear infinite; }
+        .active-scan .fingerprint-icon { color: #00ff41; text-shadow: 0 0 20px #00ff41; }
+        
+        .btn { 
+            background: transparent; border: 1px solid #00ff41; color: #00ff41; 
+            padding: 12px; width: 100%; cursor: pointer; border-radius: 5px; 
+            font-weight: bold; margin-top: 10px; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        .btn:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); }
+        
+        .loading-bar-bg { width: 100%; height: 2px; background: #111; margin-top: 15px; }
+        .loading-bar-fill { width: 0%; height: 100%; background: #00ff41; transition: 0.1s; }
+        
+        #error-msg { color: #ff4141; font-size: 0.7em; margin-top: 10px; display: none; letter-spacing: 1px; }
+
+        .signup-link { font-size: 0.7em; margin-top: 20px; color: #555; text-decoration: none; display: block; letter-spacing: 1px; }
+        .signup-link span { color: #00ff41; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div id="email-section">
+            <h2>System Login</h2>
+            <div class="input-group">
+                <label>EMAIL</label>
+                <input type="email" id="email" placeholder="Enter Identity Email">
+            </div>
+            <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="password" placeholder="••••">
+            </div>
+            <div id="error-msg">ACCESS DENIED: INVALID CREDENTIALS</div>
+            <button class="btn" onclick="validateLogin()">Verify Identity</button>
+            <a href="signup.html" class="signup-link">New user? <span>Create New Identity</span></a>
+        </div>
+
+        <div id="fingerprint-section">
+            <h2>Biometric Scan</h2>
+            <div class="fingerprint-container" id="fp-container" 
+                 onmousedown="startScan()" onmouseup="stopScan()" 
+                 ontouchstart="startScan()" ontouchend="stopScan()">
+                <div class="scan-line"></div>
+                <i class="fas fa-fingerprint fingerprint-icon"></i>
+            </div>
+            <div id="status" style="font-size: 0.7em; letter-spacing: 2px;">HOLD TO VERIFY</div>
+            <div class="loading-bar-bg">
+                <div class="loading-bar-fill" id="bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateLogin() {
+            const emailInput = document.getElementById('email').value;
+            const passInput = document.getElementById('password').value;
+            const error = document.getElementById('error-msg');
+
+            // ലോക്കൽ സ്റ്റോറേജിൽ നിന്ന് രജിസ്റ്റർ ചെയ്ത വിവരം എടുക്കുന്നു
+            const storedEmail = localStorage.getItem('savedEmail');
+            const storedPass = localStorage.getItem('savedPass');
+
+            // വെരിഫിക്കേഷൻ ലോജിക് (Default admin ലോഗിനും വർക്ക് ആകും)
+            if ((emailInput === storedEmail && passInput === storedPass) || 
+                (emailInput === "admin@hackerx.com" && passInput === "1234")) {
+                
+                error.style.display = 'none';
+                document.getElementById('email-section').style.display = 'none';
+                document.getElementById('fingerprint-section').style.display = 'block';
+            } else { 
+                error.style.display = 'block';
+                document.querySelector('.login-box').animate([
+                    { transform: 'translateX(-5px)' },
+                    { transform: 'translateX(5px)' }
+                ], { duration: 100, iterations: 3 });
+            }
+        }
+
+        let scanTimer, progress = 0;
+
+        function startScan() {
+            const container = document.getElementById('fp-container');
+            const statusText = document.getElementById('status');
+            const barFill = document.getElementById('bar-fill');
+
+            container.classList.add('active-scan');
+            statusText.innerText = "SCANNING...";
+
+            scanTimer = setInterval(() => {
+                progress += 2; 
+                barFill.style.width = progress + "%";
+
+                if (progress >= 100) {
+                    clearInterval(scanTimer);
+                    statusText.innerText = "IDENTITY VERIFIED";
+                    localStorage.setItem('isLoggedIn', 'true'); 
+                    setTimeout(() => {
+                        window.location.href = "index.html?login=success"; 
+                    }, 800);
+                }
+            }, 50);
+        }
+
+        function stopScan() {
+            clearInterval(scanTimer);
+            if (progress < 100) {
+                progress = 0;
+                document.getElementById('bar-fill').style.width = "0%";
+                document.getElementById('fp-container').classList.remove('active-scan');
+                document.getElementById('status').innerText = "HOLD TO VERIFY";
+            }
+        }
+    </script>
+</body>
+</html>
