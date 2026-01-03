@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKER X | Home System v3.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* GLOBAL STYLES */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: #0a0a0a; color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* CUSTOM CURSOR */
+        #cursor {
+            width: 20px; height: 20px; border: 2px solid #00ff41;
+            border-radius: 50%; position: fixed; pointer-events: none;
+            z-index: 10000; transition: transform 0.1s ease;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        /* PAGE TRANSITION LOADER */
+        #page-loader {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 10001; flex-direction: column; 
+            justify-content: center; align-items: center;
+        }
+        .loader-text { color: #00ff41; font-family: monospace; font-size: 1.5em; letter-spacing: 5px; margin-bottom: 20px; text-transform: uppercase; text-align: center; }
+
+        /* INTRO OVERLAY */
+        #intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+        #intro-logo { font-size: 3.5em; color: #00ff41; font-weight: bold; letter-spacing: 15px; }
+        @keyframes logoFade {
+            0% { opacity: 0; transform: scale(0.5); letter-spacing: 30px; }
+            100% { opacity: 1; transform: scale(1); letter-spacing: 5px; }
+        }
+        .animate-logo { animation: logoFade 2s ease-in-out forwards; }
+
+        /* HEADER */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 50px; background: #000; border-bottom: 1px solid #1a1a1a;
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .brand-name { font-size: 2.2em; font-weight: 700; color: #00ff41; letter-spacing: 5px; }
+        .btn-logout { background: transparent; border: 1px solid #ff4141; color: #ff4141; padding: 8px 20px; border-radius: 5px; text-decoration: none; font-size: 0.8em; transition: 0.3s; }
+        .btn-logout:hover { background: #ff4141; color: #000; }
+
+        /* HERO & TYPING */
+        .hero { height: 45vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .hero h1 { font-size: 3.5em; min-height: 1.2em; text-transform: uppercase; letter-spacing: 2px; }
+        .hero h1 span { color: #00ff41; border-right: 3px solid #00ff41; animation: blink 0.7s infinite; }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        /* SERVICE CONTAINER */
+        .service-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 40px 20px; }
+        .service-card {
+            background: #0d0d0d; border: 1px solid #1a1a1a; padding: 35px; width: 320px;
+            border-radius: 15px; text-align: center; cursor: pointer; transition: 0.4s ease;
+            position: relative; overflow: hidden;
+        }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* CARD COLORS */
+        .card-web:hover { border-color: #00ff41; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
+        .card-cyber:hover { border-color: #ff4141; box-shadow: 0 0 20px rgba(255,65,65,0.2); }
+        .card-hacking:hover { border-color: #ffcc00; box-shadow: 0 0 20px rgba(255,204,0,0.2); }
+        .card-animation:hover { border-color: #00e5ff; box-shadow: 0 0 20px rgba(0,229,255,0.2); }
+
+        .service-card h3 { font-size: 1.5em; margin-bottom: 10px; letter-spacing: 1px; }
+        .service-card p { color: #666; font-size: 0.9em; }
+
+        /* FOUNDER CARD */
+        .founder-card { max-width: 400px; margin: 40px auto; background: #0d0d0d; padding: 40px; border-radius: 20px; border-top: 4px solid #00ff41; text-align: center; }
+        .profile-img { width: 110px; height: 110px; background: #1a1a1a; border-radius: 50%; margin: 0 auto 20px; border: 2px solid #00ff41; padding: 5px; }
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        
+        .social-links { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
+        .social-links a { font-size: 24px; color: #444; transition: 0.3s; }
+        .social-links a:hover { color: #00ff41; transform: scale(1.2); }
+
+        @media (max-width: 768px) { #cursor { display: none; } * { cursor: auto; } .hero h1 { font-size: 2em; } }
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+
+    <div id="page-loader">
+        <div class="loader-text" id="loader-msg">INITIALIZING...</div>
+        <div style="width: 250px; height: 3px; background: #111; position: relative; border-radius: 5px; overflow: hidden;">
+            <div id="load-bar" style="width: 0%; height: 100%; background: #00ff41; box-shadow: 0 0 15px #00ff41;"></div>
+        </div>
+        <div id="load-percent" style="color: #00ff41; font-family: monospace; margin-top: 15px; font-size: 0.9em;">0%</div>
+    </div>
+
+    <div id="intro-overlay">
+        <div id="intro-logo">HACKER X</div>
+        <div style="color: #00ff41; font-family: monospace; margin-top: 20px; letter-spacing: 2px;">AUTHENTICATION SUCCESSFUL</div>
+    </div>
+
+    <header>
+        <div class="brand-name">HACKER X</div>
+        <a href="login.html" class="btn-logout" onclick="localStorage.removeItem('isLoggedIn')">TERMINATE SESSION</a>
+    </header>
+
+    <section class="hero">
+        <h1 id="typing-text"></h1>
+        <p style="color: #555; margin-top: 15px; letter-spacing: 1px;">THE FUTURE IS WRITTEN IN CODE.</p>
+    </section>
+
+    <section class="service-container">
+        <div class="service-card card-web" onclick="pageTransition('design.html', 'DECRYPTING DESIGN VAULT...')">
+            <i class="fas fa-code" style="color:#00ff41; font-size: 2em; margin-bottom:15px;"></i>
+            <h3 style="color: #00ff41;">Web Design</h3>
+            <p>High-end UI/UX Architecture & Archives</p>
+        </div>
+
+        <div class="service-card card-cyber" onclick="pageTransition('cyber.html', 'SECURING UPLINK...')">
+            <i class="fas fa-shield-virus" style="color:#ff4141; font-size: 2em; margin-bottom:15px;"></i>
+            <h3 style="color: #ff4141;">Cyber Security</h3>
+            <p>Advanced Encryption & Security Hub</p>
+        </div>
+
+        <div class="service-card card-hacking" onclick="pageTransition('short-hacking.html', 'INJECTING EXPLOITS...')">
+            <i class="fas fa-terminal" style="color:#ffcc00; font-size: 2em; margin-bottom:15px;"></i>
+            <h3 style="color: #ffcc00;">Short Hacking</h3>
+            <p>Quick Scripts, Tools & Terminal Exploits</p>
+        </div>
+
+        <div class="service-card card-animation" onclick="pageTransition('animation.html', 'LOADING MOTION MODULES...')">
+            <i class="fas fa-film" style="color:#00e5ff; font-size: 2em; margin-bottom:15px;"></i>
+            <h3 style="color: #00e5ff;">Animation Arts</h3>
+            <p>Mastering Motion Graphics & VFX</p>
+        </div>
+    </section>
+
+    <section id="founder">
+        <div class="founder-card">
+            <div class="profile-img">
+                <img src="my-profile.jpg" alt="Hacker X" onerror="this.src='https://via.placeholder.com/150/000000/00ff41?text=X'">
+            </div>
+            <h2 style="letter-spacing: 3px;">HACKER X</h2>
+            <p style="color: #00ff41; font-size: 0.8em; margin-bottom: 5px;">SYSTEM ARCHITECT</p>
+            <p style="color: #555; font-size: 0.6em;">ESTABLISHED: DEC 26</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 30px; color: #222; font-size: 0.7em; letter-spacing: 2px;">
+        &copy; 2025 HACKER X | ALL SYSTEMS OPERATIONAL
+    </footer>
+
+    <script>
+        // CURSOR
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // TYPING EFFECT
+        const textElement = document.getElementById('typing-text');
+        const textToType = "Executing Digital Vision...";
+        let charIndex = 0;
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                textElement.innerHTML = textToType.substring(0, charIndex + 1) + "<span>|</span>";
+                charIndex++;
+                setTimeout(typeWriter, 120);
+            }
+        }
+
+        // LOGIN CHECK & INTRO
+        const urlParams = new URLSearchParams(window.location.search);
+        const overlay = document.getElementById('intro-overlay');
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+        if (urlParams.get('login') === 'success' || isLoggedIn === 'true') {
+            if (urlParams.get('login') === 'success') {
+                document.getElementById('intro-logo').classList.add('animate-logo');
+                setTimeout(() => {
+                    overlay.style.transition = "1s ease";
+                    overlay.style.opacity = "0";
+                    setTimeout(() => { 
+                        overlay.style.display = "none"; 
+                        typeWriter(); 
+                    }, 1000);
+                }, 3000);
+            } else {
+                overlay.style.display = "none";
+                typeWriter();
+            }
+        } else {
+            window.location.href = "login.html";
+        }
+
+        // PAGE TRANSITION LOGIC
+        function pageTransition(targetUrl, message) {
+            const loader = document.getElementById('page-loader');
+            const bar = document.getElementById('load-bar');
+            const percentText = document.getElementById('load-percent');
+            const msgText = document.getElementById('loader-msg');
+            
+            msgText.innerHTML = message;
+            loader.style.display = 'flex';
+            
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    window.location.href = targetUrl;
+                } else {
+                    width += Math.floor(Math.random() * 20) + 5;
+                    if (width > 100) width = 100;
+                    bar.style.width = width + '%';
+                    percentText.innerHTML = width + '%';
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
